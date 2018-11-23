@@ -79,6 +79,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MySqlCmd\MySqlCmd.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceManager\OrderForm.aspx.cs">
       <DependentUpon>OrderForm.aspx</DependentUpon>

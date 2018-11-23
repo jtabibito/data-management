@@ -11,7 +11,7 @@
     <form id="form1" runat="server">
         <div>
             <p>
-        <asp:GridView ID="GridView1" runat="server" BackColor="White" BorderColor="#CC9966" BorderStyle="None" BorderWidth="1px" CellPadding="4">
+        <asp:GridView ID="GridView1" runat="server" BackColor="White" BorderColor="#CC9966" BorderStyle="None" BorderWidth="1px" CellPadding="4" ShowFooter="True">
             <Columns>
                 <asp:TemplateField ShowHeader="False">
                     <EditItemTemplate>
@@ -19,6 +19,10 @@
                         <asp:Button ID="Button2" runat="server" CausesValidation="False" CommandName="Cancel" Text="取消" />
                         &nbsp;
                     </EditItemTemplate>
+                    <FooterTemplate>
+                        <asp:CheckBox ID="CheckBox1" runat="server" AutoPostBack="True" OnCheckedChanged="CheckBox1_CheckedChanged" Text="添加新数据" Width="120px" />
+                        <asp:Button ID="InsertButton" runat="server" OnClick="InsertButton_Click" Text="添加" />
+                    </FooterTemplate>
                     <ItemTemplate>
                         <asp:Button ID="Button1" runat="server" CausesValidation="False" CommandName="Edit" Text="编辑" />
                         <asp:Button ID="Button2" runat="server" CausesValidation="False" CommandName="Delete" Text="删除" />
@@ -36,7 +40,6 @@
             <SortedDescendingCellStyle BackColor="#F6F0C0" />
             <SortedDescendingHeaderStyle BackColor="#7E0000" />
         </asp:GridView>
-        </p>
         </div>
     </form>
     </body>
