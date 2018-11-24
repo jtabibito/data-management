@@ -106,10 +106,18 @@ namespace DataManager.ServiceManager
             this.GridView1.DataBind();
         }
 
+        private void SetSelectionString(ref string select_string) {
+            if (Session["user_context"].ToString() != "") {
+                select_string += " WHERE " + Session["user_context"];
+            }
+        }
+
         // 更新前台显示数据
         private void FormViewBindData() {
             conn = MySqlCmd.MySqlCmd.Connection(conn_str);
             string selection_str = "SELECT * FROM ORDER_FORM";
+            SetSelectionString(ref selection_str);
+
             MySqlCmd.MySqlCmd.SetMySqlDataAdapter(selection_str, conn, AfterSetAdapter);
             ((Button)(this.GridView1.FooterRow.Cells[0].Controls[3])).Visible = false;
         }
@@ -135,8 +143,7 @@ namespace DataManager.ServiceManager
         }
         
         private void AfterExecuteCmd(MySqlCmd.MySqlCmd.MySqlContext udata) {
-            Response.Write(udata.comm.CommandText + "</br>");
-            Response.Write("受影响行数: " + udata.res + "</br>");
+            return;
         }
 
         private void UpdateData(int row_index) {

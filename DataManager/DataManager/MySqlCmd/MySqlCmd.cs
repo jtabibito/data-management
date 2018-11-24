@@ -20,7 +20,7 @@ namespace DataManager.MySqlCmd {
         public struct MySqlContext {
             public MySqlConnection conn;               // 用户请求的数据库连接对象
             public MySqlCommand comm;                  // 用户请求的command命令对象
-            public MySqlRequest status;                         // 数据库请求的命令号
+            public MySqlRequest status;                // 数据库请求的命令号
             public string context;                     // 用户请求的command命令描述
             public int res;                            // 数据库执行操作返回值
             public CreateCommand create_cmd;           // 用户自定义数据库命令创建方法
@@ -53,18 +53,50 @@ namespace DataManager.MySqlCmd {
         /// <summary>
         /// 创建数据库命令对象，执行用户自定义方法
         /// </summary>
-        /// <param name="cmd_str">数据库命令字符串</param>
-        /// <param name="conn">连接的数据库对象</param>
-        /// <param name="callback">用户自定义方法</param>
+        /// <param name="udata">自定义数据类型</param>
         public static void SetMySqlCommand(ref MySqlContext udata) {
             lock (udata.conn) {
-                udata.create_cmd(ref udata);
-                udata.comm = new MySqlCommand(udata.context, udata.conn);
                 udata.conn.Open();
+                udata.create_cmd(ref udata);
+                if (udata.comm == null) {
+                    udata.comm = new MySqlCommand(udata.context, udata.conn);
+                }
                 udata.res = udata.comm.ExecuteNonQuery();
                 udata.conn.Close();
-                udata.callback(udata);
             }
+            udata.callback(udata);
+        }
+
+        /// <summary>
+        /// 登录后台调用
+        /// </summary>
+        /// <param name="udata">自定义数据类型</param>
+        public static void LoginCommand(ref MySqlContext udata) {
+            lock (udata.conn) {
+                udata.conn.Open();
+                udata.create_cmd(ref udata);
+                if (udata.comm == null) {
+                    udata.comm = new MySqlCommand(udata.context, udata.conn);
+                }
+
+                MySqlDataReader reader = udata.comm.ExecuteReader();
+                reader.Read();
+                if (reader.HasRows) {
+                    if (reader.FieldCount > 2) {
+                        udata.context = "`" + reader.GetName(2) + "`=\"" + reader.GetString(2) + "\";"; ;
+                    }
+                    else {
+                        udata.context = "";
+                    }
+                    udata.res = 1;
+                }
+                else {
+                    udata.res = 0;
+                }
+                reader.Close();
+                udata.conn.Close();
+            }
+            udata.callback(udata);
         }
     }
 }

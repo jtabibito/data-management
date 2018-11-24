@@ -14,3 +14,5 @@
                         public CreateCommand create_cmd;           // 用户自定义数据库命令创建方法
                         public CommandCallBack callback;           // 用户自定义方法
                      }
+2018/11/24 shakker2c 设计登录页面,使用数据结构保存用户数据对象，MySqlCmd添加登录调用自定义方法防止sql注入,
+                     使用Session["user_context"]保存读取数据库的内容,修改后台登录后进入订单的页面,让对应的表格显示到用户浏览器
