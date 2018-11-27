@@ -4,9 +4,9 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.Configuration;
 using System.Web.Services.Configuration;
 using System.Data;
-using System.Web.Configuration;
 using MySql.Data.MySqlClient;
 
 namespace DataManager.ServiceManager
@@ -44,7 +44,7 @@ namespace DataManager.ServiceManager
         }
 
         /// <summary>
-        /// 创建数据库操作字符串
+        /// 创建数据库操作字符串, 修改table_name使用不同的数据表
         /// </summary>
         /// <param name="udata">自定义数据</param>
         private void CreateCmd(ref MySqlCmd.MySqlCmd.MySqlContext udata) {
@@ -62,11 +62,15 @@ namespace DataManager.ServiceManager
                     }
 
                     for (int i = 1; i < this.GridView1.HeaderRow.Cells.Count; i++) {
+                        string details_text = ((TextBox)(this.GridView1.FooterRow.Cells[i].Controls[0])).Text.Trim();
                         if (i < this.GridView1.Rows[0].Cells.Count - 1) {
-                            add_str += ((TextBox)(this.GridView1.FooterRow.Cells[i].Controls[0])).Text.Trim() + "\",\"";
+                            if (i < 3 && details_text == "") {
+                                break;
+                            }
+                            add_str += details_text + "\",\"";
                         }
                         else {
-                            add_str += ((TextBox)(this.GridView1.FooterRow.Cells[i].Controls[0])).Text.Trim() + "\");";
+                            add_str += details_text + "\");";
                         }
                     }
                     udata.context = add_str;
@@ -143,6 +147,9 @@ namespace DataManager.ServiceManager
         }
         
         private void AfterExecuteCmd(MySqlCmd.MySqlCmd.MySqlContext udata) {
+            if (udata.context.IndexOf("Error: ") >= 0) {
+                ClientScript.RegisterStartupScript(Page.GetType(), "error", "<script>alert(\"You have an error!\")</script>");
+            }
             return;
         }
 

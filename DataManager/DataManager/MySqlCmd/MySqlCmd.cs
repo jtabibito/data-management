@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Data;
 using MySql.Data.MySqlClient;
 
 namespace DataManager.MySqlCmd {
@@ -61,7 +62,13 @@ namespace DataManager.MySqlCmd {
                 if (udata.comm == null) {
                     udata.comm = new MySqlCommand(udata.context, udata.conn);
                 }
-                udata.res = udata.comm.ExecuteNonQuery();
+
+                try {
+                    udata.res = udata.comm.ExecuteNonQuery();
+                }
+                catch (Exception ex) {
+                    udata.context = "Error: " + ex.Message;
+                }
                 udata.conn.Close();
             }
             udata.callback(udata);
