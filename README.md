@@ -6,7 +6,7 @@
 2018/11/22 shakker2c 实现按钮设计功能,数据库命令模块化。</br>
 2018/11/23 shakker2c 设计数据结构保存用户的数据对象, 实现后台增删改的功能</br>
                      public struct MySqlContext {</br>
-                        \tpublic MySqlConnection conn;               // 用户请求的数据库连接对象</br>
+                        public MySqlConnection conn;               // 用户请求的数据库连接对象</br>
                         public MySqlCommand comm;                  // 用户请求的command命令对象</br>
                         public MySqlRequest status;                // 数据库请求的命令号</br>
                         public string context;                     // 用户请求的command命令描述</br>
